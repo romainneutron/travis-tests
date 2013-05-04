@@ -2,13 +2,31 @@
 
 class ZipTest extends PHPUnit_Framework_TestCase
 {
-    public function testChmod()
+    private $file;
+
+    public function setUp()
+    {
+        $this->file = __DIR__ . '/test.zip';
+        $this->clean();
+    }
+
+    public function tearDown()
+    {
+        $this->clean();
+    }
+
+    private function clean()
+    {
+        if (file_exists($this->file)) {
+            unlink($this->file);
+        }
+    }
+
+    public function testCreateAddAndClose()
     {
         $zip = new ZipArchive();
 
-        $file = __DIR__ . '/test.zip';
-
-        if (true !== $zip->open($file, ZIPARCHIVE::CREATE)) {
+        if (true !== $zip->open($this->file, ZIPARCHIVE::CREATE)) {
             $this->fail('Unable to create zip file');
         }
         if (true !== $zip->addFile(__FILE__, 'script.php')) {
@@ -18,13 +36,20 @@ class ZipTest extends PHPUnit_Framework_TestCase
             $this->fail('Unable to close archive');
         }
 
-        $this->assertFileExists($file);
+        $this->assertFileExists($this->file);
+    }
 
-        if (true !== @chmod($file, 0760)) {
-            $this->fail('Unable to chmod the archive');
+    public function testOpenAndClose()
+    {
+        $zip = new ZipArchive();
+
+        $file = __DIR__ . '/../fixtures/README.md.zip';
+
+        if (true !== $zip->open($file)) {
+            $this->fail('Unable to create zip file');
         }
-        if (true !== @unlink($file)) {
-            $this->fail('Unable to unlink the archive');
+        if (true !== $zip->close()) {
+            $this->fail('Unable to close archive');
         }
     }
 }
