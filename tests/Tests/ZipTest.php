@@ -39,6 +39,44 @@ class ZipTest extends PHPUnit_Framework_TestCase
         $this->assertFileExists($this->file);
     }
 
+    public function testCreateAddAndCloseWithOverwriteWithoutFile()
+    {
+        $zip = new ZipArchive();
+
+        if (true !== $zip->open($this->file, ZIPARCHIVE::OVERWRITE)) {
+            $this->fail('Unable to create zip file');
+        }
+        if (true !== $zip->addFile(__FILE__, 'script.php')) {
+            $this->fail('Unable to add file to zip');
+        }
+        if (true !== $zip->close()) {
+            $this->fail('Unable to close archive');
+        }
+
+        $this->assertFileExists($this->file);
+    }
+
+    public function testCreateAddAndCloseWithOverwriteOnFile()
+    {
+        $zip = new ZipArchive();
+
+        if (true !== copy(__DIR__ . '/../fixtures/README.md.zip', $this->file)) {
+            $this->fail('Unable to copy fixture');
+        }
+
+        if (true !== $zip->open($this->file, ZIPARCHIVE::OVERWRITE)) {
+            $this->fail('Unable to create zip file');
+        }
+        if (true !== $zip->addFile(__FILE__, 'script.php')) {
+            $this->fail('Unable to add file to zip');
+        }
+        if (true !== $zip->close()) {
+            $this->fail('Unable to close archive');
+        }
+
+        $this->assertFileExists($this->file);
+    }
+
     public function testOpenAndClose()
     {
         $zip = new ZipArchive();
