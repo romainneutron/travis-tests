@@ -1,0 +1,12 @@
+{
+    "name": "neutron/travis-tests",
+    "authors": [
+        {
+            "name": "Romain Neutron",
+            "email": "imprec@gmail.com"
+        }
+    ],
+    "require": {
+	"phpunit/phpunit": "~3.7"
+    }
+}
